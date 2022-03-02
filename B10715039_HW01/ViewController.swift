@@ -13,11 +13,14 @@ class ViewController: UIViewController, UIPickerViewDataSource ,UIPickerViewDele
                   "🍉", "🍇", "🍅", "🥝"
     ]
     var score = 0
+    var scroll = 0
     var col1 = [String]()
     var col2 = [String]()
     var col3 = [String]()
     @IBOutlet weak var helloLabel: UILabel!
     @IBOutlet weak var bingoLabel: UILabel!
+    @IBOutlet weak var scrollCountLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var pickerView: UIPickerView!
     @IBAction func spinButtonClick(_ sender: Any) {
         pickerView.selectRow(Int(arc4random() % 100), inComponent: 0, animated: true)
@@ -25,9 +28,13 @@ class ViewController: UIViewController, UIPickerViewDataSource ,UIPickerViewDele
         pickerView.selectRow(Int(arc4random() % 100), inComponent: 2, animated: true)
         if (col1[pickerView.selectedRow(inComponent: 0)] == col2[pickerView.selectedRow(inComponent: 1)] && col2[pickerView.selectedRow(inComponent: 1)] == col3[pickerView.selectedRow(inComponent: 2)]) {
             bingoLabel.text = "Bingo!"
+            score += 1
+            scoreLabel.text = "Score: \(score)"
         } else {
             bingoLabel.text = "沒中獎!"
         }
+        scroll += 1
+        scrollCountLabel.text = "Scroll: \(scroll)"
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,9 +66,11 @@ class ViewController: UIViewController, UIPickerViewDataSource ,UIPickerViewDele
             let confirmAction = UIAlertAction(title: "登入", style: .default) {(action) in
                 let acc = (alert.textFields?.first)! as UITextField
                 let pwd = (alert.textFields?.last)! as UITextField
-                if (acc.text!) == "" || (pwd.text!) == ""{
-                    let alert2 = UIAlertController(title: "", message: "請輸入帳號及密碼！", preferredStyle: .alert)
-                    alert2.addAction(UIAlertAction(title: "確定", style: .cancel))
+                if (acc.text!) == ""{
+                    let alert2 = UIAlertController(title: "", message: "請輸入帳號！", preferredStyle: .alert)
+                    alert2.addAction(UIAlertAction(title: "確定", style: .cancel) {(action) in
+                        self.present(alert, animated: true)
+                    })
                     
                     self.present(alert2, animated: true)
                     return
